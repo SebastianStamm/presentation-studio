@@ -1,0 +1,62 @@
+<head>
+  <style>
+    body {
+      margin: 0;
+    }
+    .container {
+      background-image: url("background.png");
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    video {
+      background-color: greenyellow;
+      object-fit: cover;
+      position: absolute;
+    }
+
+    .webcam {
+      bottom: 0;
+      left: 0;
+
+      width: 15vw;
+      height: 30vh;
+
+      outline: 1px solid black;
+      box-shadow: 0 0 10px black;
+    }
+
+    .screen {
+      position: absolute;
+      left: 7vw;
+      bottom: 7vh;
+      width: 93vw;
+      height: 93vh;
+      outline: 2px solid black;
+      box-shadow: inset 2px -2px 10px rgba(0, 0, 0, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <video class="screen" autoplay="true"></video>
+    <div class="screen"></div>
+    <video class="webcam" autoplay="true"></video>
+  </div>
+
+  <script>
+    window.addWebcam = (stream) =>
+      (document.querySelector(".webcam").srcObject = stream);
+
+    window.addStream = (stream) => {
+      document.querySelector(".screen").srcObject = stream;
+    };
+
+    window.switchTo = (id) => {
+      console.log("switching to layout", id);
+    };
+  </script>
+</body>

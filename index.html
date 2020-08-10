@@ -1,0 +1,47 @@
+<button id="start">Open Presenter</button>
+
+<button id="addScreen">Add Video Source</button>
+
+<div id="screen-controls">
+  <h3>Screen Controls</h3>
+  <button data-id="0">Countdown</button>
+  <button data-id="1">Camunda Splash</button>
+  <button data-id="2">Webcam Only</button>
+  <button data-id="3">Webcam + Screen</button>
+  <button data-id="4">Webcam + 2 Screen</button>
+</div>
+
+<script>
+  let presenter;
+  let webcamStream;
+  let videoStream;
+
+  document.querySelector("#start").addEventListener("click", () => {
+    presenter = open("playback.html");
+    presenter.addEventListener("load", () => {
+      presenter.addWebcam(webcamStream);
+      presenter.addStream(videoStream);
+    });
+  });
+
+  document.querySelector("#addScreen").addEventListener("click", async () => {
+    videoStream = await navigator.mediaDevices.getDisplayMedia({
+      video: { mediaSource: "screen" },
+    });
+    if (presenter) {
+      presenter.addStream(videoStream);
+    }
+  });
+
+  document.querySelector("#screen-controls").addEventListener("click", (e) => {
+    const id = e.target.getAttribute("data-id");
+
+    if (presenter && id) {
+      presenter.switchTo(id);
+    }
+  });
+
+  navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+    webcamStream = stream;
+  });
+</script>
