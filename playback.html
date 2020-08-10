@@ -41,7 +41,9 @@
     }
 
     .layout-0 .webcam,
-    .layout-0 .screen {
+    .layout-0 .screen,
+    .layout-1 .webcam,
+    .layout-1 .screen {
       opacity: 0;
     }
 
@@ -60,13 +62,28 @@
       width: 15vw;
       height: 30vh;
     }
+
+    img {
+      left: 35vw;
+      width: 30vw;
+      top: calc(50vh - 100px);
+      position: absolute;
+      opacity: 0;
+
+      transition: 1s;
+    }
+
+    .layout-1 img {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
-  <div id="container" class="container layout-3">
+  <div id="container" class="container layout-0">
     <video class="screen" autoplay="true"></video>
     <div class="screen shadowOverlay"></div>
     <video class="webcam" autoplay="true"></video>
+    <img class="camundaLogo" src="camunda.png" />
   </div>
 
   <script>
