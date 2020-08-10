@@ -19,14 +19,14 @@
     }
 
     .webcam {
-      bottom: 0;
-      left: 0;
-
-      width: 15vw;
-      height: 30vh;
+      bottom: 3vh;
+      left: 3vw;
+      width: 94vw;
+      height: 94vh;
 
       outline: 1px solid black;
       box-shadow: 0 0 10px black;
+      transition: 1s;
     }
 
     .screen {
@@ -37,13 +37,35 @@
       height: 93vh;
       outline: 2px solid black;
       box-shadow: inset 2px -2px 10px rgba(0, 0, 0, 0.6);
+      transition: 1s;
+    }
+
+    .layout-0 .webcam,
+    .layout-0 .screen {
+      opacity: 0;
+    }
+
+    .layout-2 .screen {
+      opacity: 0;
+      bottom: 3vh;
+      left: 3vw;
+      width: 94vw;
+      height: 94vh;
+    }
+
+    .layout-3 .webcam {
+      bottom: 0;
+      left: 0;
+
+      width: 15vw;
+      height: 30vh;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div id="container" class="container layout-3">
     <video class="screen" autoplay="true"></video>
-    <div class="screen"></div>
+    <div class="screen shadowOverlay"></div>
     <video class="webcam" autoplay="true"></video>
   </div>
 
@@ -56,7 +78,12 @@
     };
 
     window.switchTo = (id) => {
-      console.log("switching to layout", id);
+      const container = document.querySelector("#container");
+
+      for (let i = 0; i < 5; i++) {
+        container.classList.remove("layout-" + i);
+      }
+      container.classList.add("layout-" + id);
     };
   </script>
 </body>
