@@ -6,7 +6,7 @@
     }
     .container {
       background-image: url("background.png");
-      background-size: cover;
+      background-size: stretch;
       background-position: center;
       width: 100%;
       height: 100%;
@@ -41,10 +41,16 @@
       transition: 1s;
     }
 
+    .layout-0.container {
+      background-image: none;
+    }
+
     .layout-0 .webcam,
     .layout-0 .screen,
     .layout-1 .webcam,
-    .layout-1 .screen {
+    .layout-1 .screen,
+    .layout-5 .webcam,
+    .layout-5 .shadowOverlay {
       opacity: 0;
     }
 
@@ -62,6 +68,14 @@
 
       width: 15vw;
       height: 30vh;
+    }
+
+    .layout-5 .screen,
+    .layout-0 .screen {
+      bottom: 0vh;
+      left: 0vw;
+      width: 100vw;
+      height: 100vh;
     }
 
     .camundaLogo {
@@ -85,21 +99,19 @@
     #slices img {
       position: absolute;
       top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      left: -120px;
     }
   </style>
 </head>
 <body>
   <div id="slices"></div>
 
-  <!-- <div id="container" class="container layout-0">
+  <div id="container" class="container layout-0">
     <video class="screen" autoplay="true"></video>
     <div class="screen shadowOverlay"></div>
     <video class="webcam" autoplay="true"></video>
     <img class="camundaLogo" src="camunda.png" />
-  </div> -->
+  </div>
 
   <script>
     window.addWebcam = (stream) =>
@@ -112,10 +124,21 @@
     window.switchTo = (id) => {
       const container = document.querySelector("#container");
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 6; i++) {
         container.classList.remove("layout-" + i);
       }
       container.classList.add("layout-" + id);
+
+      if (id === "0") {
+        window.setTimeout(() => {
+          document.querySelectorAll("#slices img").forEach((img) => {
+            img.style.transition = "transform " + (4 + rand(1)) + "s";
+            setTimeout(() => {
+              img.style.transform = "";
+            });
+          });
+        }, 1000);
+      }
     };
 
     function rand(number) {
@@ -137,17 +160,16 @@
     }
 
     for (let i = 0; i < 27; i++) {
-      // for (let i = 0; i < 2; i++) {
       const img = document.createElement("img");
       img.setAttribute("src", "slices/" + i + ".png");
       document.querySelector("#slices").appendChild(img);
 
       img.style.transform = `${getRandomDirection()} rotate(${rand(360)}deg)`;
 
-      img.style.transition = "transform " + (4 + rand(1)) + "s";
-      setTimeout(() => {
-        img.style.transform = "";
-      });
+      // img.style.transition = "transform " + (4 + rand(1)) + "s";
+      // setTimeout(() => {
+      //   img.style.transform = "";
+      // });
     }
   </script>
 </body>
