@@ -2,6 +2,7 @@
   <style>
     body {
       margin: 0;
+      overflow: hidden;
     }
     .container {
       background-image: url("background.png");
@@ -63,7 +64,7 @@
       height: 30vh;
     }
 
-    img {
+    .camundaLogo {
       left: 35vw;
       width: 30vw;
       top: calc(50vh - 100px);
@@ -76,15 +77,29 @@
     .layout-1 img {
       opacity: 1;
     }
+
+    #slices {
+      overflow: hidden;
+    }
+
+    #slices img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+    }
   </style>
 </head>
 <body>
-  <div id="container" class="container layout-0">
+  <div id="slices"></div>
+
+  <!-- <div id="container" class="container layout-0">
     <video class="screen" autoplay="true"></video>
     <div class="screen shadowOverlay"></div>
     <video class="webcam" autoplay="true"></video>
     <img class="camundaLogo" src="camunda.png" />
-  </div>
+  </div> -->
 
   <script>
     window.addWebcam = (stream) =>
@@ -102,5 +117,37 @@
       }
       container.classList.add("layout-" + id);
     };
+
+    function rand(number) {
+      return Math.random() * number;
+    }
+
+    function getRandomDirection() {
+      const dir = ~~rand(4);
+      switch (dir) {
+        case 0:
+          return `translate(-2920px, ${500 - rand(1000)}px)`;
+        case 1:
+          return `translate(2920px, ${500 - rand(1000)}px)`;
+        case 2:
+          return `translate(${500 - rand(1000)}px, -2080px)`;
+        case 3:
+          return `translate(${500 - rand(1000)}px, 2080px)`;
+      }
+    }
+
+    for (let i = 0; i < 27; i++) {
+      // for (let i = 0; i < 2; i++) {
+      const img = document.createElement("img");
+      img.setAttribute("src", "slices/" + i + ".png");
+      document.querySelector("#slices").appendChild(img);
+
+      img.style.transform = `${getRandomDirection()} rotate(${rand(360)}deg)`;
+
+      img.style.transition = "transform " + (4 + rand(1)) + "s";
+      setTimeout(() => {
+        img.style.transform = "";
+      });
+    }
   </script>
 </body>
