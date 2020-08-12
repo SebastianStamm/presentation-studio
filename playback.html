@@ -88,7 +88,21 @@
       transition: 1s;
     }
 
-    .layout-1 img {
+    .camundaLogo2 {
+      bottom: 1vh;
+      right: 1vw;
+      width: 8vw;
+      position: absolute;
+      opacity: 0;
+
+      transition: 1s;
+    }
+
+    .layout-3 .camundaLogo2 {
+      opacity: 1;
+    }
+
+    .layout-1 .camundaLogo {
       opacity: 1;
     }
 
@@ -111,6 +125,7 @@
     <div class="screen shadowOverlay"></div>
     <video class="webcam" autoplay="true"></video>
     <img class="camundaLogo" src="camunda.png" />
+    <img class="camundaLogo2" src="camunda.png" />
   </div>
 
   <script>
