@@ -131,7 +131,6 @@
         recorder.start();
 
         recorder.onstop = (e) => {
-          console.log(recorder.mimeType);
           recorder = null;
           document.querySelector("#record").classList.remove("recording");
           const completeBlob = new Blob(chunks, { type: chunks[0].type });
