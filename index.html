@@ -1,48 +1,133 @@
-<button id="start">Open Presenter</button>
-
-<button id="addScreen">Add Video Source</button>
-
-<div id="screen-controls">
-  <h3>Screen Controls</h3>
-  <button data-id="5">Old Fullscreen</button>
-  <button data-id="0">Countdown</button>
-  <button data-id="1">Camunda Splash</button>
-  <button data-id="2">Webcam Only</button>
-  <button data-id="3">Webcam + Screen</button>
-  <button data-id="4">Webcam + 2 Screen</button>
-</div>
-
-<script>
-  let presenter;
-  let webcamStream;
-  let videoStream;
-
-  document.querySelector("#start").addEventListener("click", () => {
-    presenter = open("playback.html");
-    presenter.addEventListener("load", () => {
-      presenter.addWebcam(webcamStream);
-      presenter.addStream(videoStream);
-    });
-  });
-
-  document.querySelector("#addScreen").addEventListener("click", async () => {
-    videoStream = await navigator.mediaDevices.getDisplayMedia({
-      video: { mediaSource: "screen" },
-    });
-    if (presenter) {
-      presenter.addStream(videoStream);
+<head>
+  <style>
+    body {
+      background: #eee;
+      color: #333;
     }
-  });
 
-  document.querySelector("#screen-controls").addEventListener("click", (e) => {
-    const id = e.target.getAttribute("data-id");
+    .actionButtons button {
+      display: inline-block;
+      padding: 0.7em 1.4em;
+      margin: 0 0.3em 0.3em 0;
+      border-radius: 0.15em;
+      box-sizing: border-box;
+      text-decoration: none;
+      font-family: "Roboto", sans-serif;
+      text-transform: uppercase;
+      font-weight: 400;
+      color: #ffffff;
+      background-color: #3369ff;
+      box-shadow: inset 0 -0.6em 0 -0.35em rgba(0, 0, 0, 0.17);
+      text-align: center;
+      position: relative;
 
-    if (presenter && id) {
-      presenter.switchTo(id);
+      cursor: pointer;
+      border: none;
+      outline: none;
     }
-  });
 
-  navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
-    webcamStream = stream;
-  });
-</script>
+    button:active {
+      top: 0.1em;
+    }
+
+    #start {
+      font-size: 1.5em;
+    }
+
+    #screen-controls button {
+      width: 600px;
+      padding: 0;
+      margin: 10px;
+      border: 0;
+      outline: 2px solid black;
+    }
+
+    #screen-controls button.active {
+      outline: 4px solid red;
+    }
+
+    #screen-controls button::after {
+      content: "inactive";
+      text-transform: uppercase;
+      display: block;
+      padding: 0.6em;
+
+      background-color: lightgray;
+    }
+
+    #screen-controls button.active::after {
+      content: "active";
+      font-weight: bold;
+      color: white;
+      background-color: red;
+    }
+
+    button img {
+      width: inherit;
+      height: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Camunda Broadcasting Studio</h1>
+  <div class="actionButtons">
+    <button id="start">Open Presentation Screen</button>
+    <button id="addScreen">Add Video Source</button>
+  </div>
+  <hr />
+  <div id="screen-controls">
+    <h3>Layout Templates</h3>
+    <button data-id="5"><img src="layouts/old_fullscreen.PNG" /></button>
+    <button data-id="0"><img src="layouts/countdown.png" /></button>
+    <button data-id="1"><img src="layouts/splash.PNG" /></button>
+    <button data-id="2"><img src="layouts/webcam.PNG" /></button>
+    <button data-id="3"><img src="layouts/2screen.PNG" /></button>
+  </div>
+
+  <script>
+    let presenter;
+    let webcamStream;
+    let videoStream;
+
+    document.querySelector("#start").addEventListener("click", () => {
+      presenter = open("playback.html");
+      presenter.addEventListener("load", () => {
+        presenter.addWebcam(webcamStream);
+        presenter.addStream(videoStream);
+
+        document.querySelector('[data-id="1"]').click();
+      });
+    });
+
+    document.querySelector("#addScreen").addEventListener("click", async () => {
+      videoStream = await navigator.mediaDevices.getDisplayMedia({
+        video: { mediaSource: "screen" },
+      });
+      if (presenter) {
+        presenter.addStream(videoStream);
+      }
+    });
+
+    let currentActive;
+    document
+      .querySelector("#screen-controls")
+      .addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        const id = btn.getAttribute("data-id");
+
+        if (presenter && id) {
+          currentActive?.classList.remove("active");
+          btn.classList.add("active");
+          currentActive = btn;
+          presenter.switchTo(id);
+        }
+      });
+
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then(function (stream) {
+        webcamStream = stream;
+      });
+  </script>
+</body>
