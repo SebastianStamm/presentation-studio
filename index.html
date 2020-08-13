@@ -66,6 +66,24 @@
       width: inherit;
       height: 300px;
     }
+
+    #record {
+      margin-right: 2em;
+      float: right;
+      font-size: 1.2em;
+    }
+
+    #record::after {
+      content: " Record";
+    }
+
+    #record.recording {
+      background-color: #ff3333;
+    }
+
+    #record.recording::after {
+      content: " Recording in Progress...";
+    }
   </style>
 </head>
 
@@ -74,6 +92,7 @@
   <div class="actionButtons">
     <button id="start">Open Presentation Screen</button>
     <button id="addScreen">Add Video Source</button>
+    <button id="record">🔴</button>
   </div>
   <hr />
   <div id="screen-controls">
@@ -90,6 +109,39 @@
     let presenter;
     let webcamStream;
     let videoStream;
+    let recorder;
+
+    document.querySelector("#record").addEventListener("click", async () => {
+      if (recorder) {
+        recorder.stop();
+        return;
+      }
+
+      if (!recorder) {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: { mediaSource: "screen" },
+        });
+
+        document.querySelector("#record").classList.add("recording");
+
+        recorder = new MediaRecorder(stream);
+
+        const chunks = [];
+        recorder.ondataavailable = (e) => chunks.push(e.data);
+        recorder.start();
+
+        recorder.onstop = (e) => {
+          console.log(recorder.mimeType);
+          recorder = null;
+          document.querySelector("#record").classList.remove("recording");
+          const completeBlob = new Blob(chunks, { type: chunks[0].type });
+          const a = document.createElement("a");
+          a.setAttribute("download", "recording.mp4");
+          a.href = URL.createObjectURL(completeBlob);
+          a.click();
+        };
+      }
+    });
 
     document.querySelector("#start").addEventListener("click", () => {
       presenter = open("playback.html");
